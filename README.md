@@ -1,57 +1,80 @@
-# Online Quiz Platform API (Golang)
+# 🎓 Online Quiz Platform API (Golang)
 
-## 📌 Overview
+A production-ready REST API built in Go for managing quizzes, questions, attempts, and automatic scoring.
 
-This project is a REST API for an online quiz system built using **Go, Gin, and GORM**.
-It allows teachers to create quizzes and questions, and students to attempt quizzes and receive automatic scores.
-
----
-
-## ✨ Features
-
-* Create quizzes
-* Add questions to quizzes
-* Start quiz attempts
-* Submit answers
-* Automatic score calculation
-* Attempt tracking with start and end time
+The system supports full quiz lifecycle:
+create quiz → add questions → start attempt → submit answers → auto score.
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ Architecture
 
-* Go (Golang)
-* Gin Web Framework
-* GORM ORM
-* SQLite Database
+This project follows a **layered modular architecture** with clearly separated responsibilities.
 
----
+```
+quiz-api/
+├── main.go               # Entry point (server startup)
+├── config/database.go    # Database connection & migration
+├── models/               # Database schema definitions
+├── handlers/             # API request handling logic
+├── routes/               # Route registration
+├── docs/                 # Design & AI prompts
+└── README.md
+```
 
-## 🗄 Database Design
+### Dependency Flow
 
-### Tables
+main.go → routes → handlers → models → database
 
-* Quiz
-* Question
-* Attempt
-* Answer
-
-### Relationships
-
-* One Quiz → Many Questions
-* One Attempt → Many Answers
+Each layer handles a specific responsibility.
 
 ---
 
-## 🔗 API Endpoints
+## 🚀 Setup Instructions
+
+### Prerequisites
+
+* Go installed
+* Git installed
+
+### Run the Project
+
+```
+go run main.go
+```
+
+Server runs on:
+
+```
+http://localhost:8080
+```
+
+Database tables are auto-created on startup.
+
+---
+
+## 📡 API Documentation
+
+### Base URL
+
+```
+http://localhost:8080
+```
+
+| Method | Endpoint  | Description    |
+| ------ | --------- | -------------- |
+| POST   | /quiz     | Create quiz    |
+| POST   | /question | Add question   |
+| POST   | /start    | Start attempt  |
+| POST   | /submit   | Submit answers |
+
+---
 
 ### Create Quiz
 
 POST `/quiz`
 
-Example request:
-
-```json
+```
 {
   "title": "Science Quiz",
   "timeLimitMinutes": 15
@@ -64,11 +87,30 @@ Example request:
 
 POST `/question`
 
+```
+{
+  "quizID": 1,
+  "text": "Earth is a?",
+  "optionA": "Star",
+  "optionB": "Planet",
+  "optionC": "Moon",
+  "optionD": "Galaxy",
+  "correct": "B"
+}
+```
+
 ---
 
 ### Start Attempt
 
 POST `/start`
+
+```
+{
+  "quizID": 1,
+  "userName": "Pooja"
+}
+```
 
 ---
 
@@ -76,46 +118,97 @@ POST `/start`
 
 POST `/submit`
 
+```
+[
+  {
+    "attemptID": 1,
+    "questionID": 1,
+    "selected": "B"
+  }
+]
+```
+
+Response:
+
+```
+{
+  "score": 1
+}
+```
+
 ---
 
 ## 🧮 Scoring Logic
 
-Each submitted answer is compared with the correct option.
-Score = number of correct answers.
+Each submitted answer is compared with the stored correct option.
+
+Algorithm:
+
+1. Retrieve correct answer from database
+2. Compare with selected answer
+3. Increment score if matched
+4. Store attempt end time
+5. Return total score
+
+Time complexity:
+O(n) where n = number of answers.
 
 ---
 
-## ▶ How to Run the Project
+## 🗄 Database Design
 
-1. Install Go
-2. Clone repository
-3. Run server:
+Tables:
 
-```
-go run main.go
-```
+* Quiz
+* Question
+* Attempt
+* Answer
 
-4. Test APIs using Postman
+Relationships:
+
+Quiz → Questions (one-to-many)
+Attempt → Answers (one-to-many)
 
 ---
 
-## 📁 Project Structure
+## 🔒 Data Consistency
 
-```
-config/
-models/
-handlers/
-routes/
-docs/
-main.go
-```
+* All answers stored per attempt
+* Score computed only after submission
+* Attempt start and end times tracked
+
+This ensures complete attempt history.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose          |
+| ---------- | ---------------- |
+| Go         | Backend language |
+| Gin        | HTTP routing     |
+| GORM       | ORM              |
+| SQLite     | Database         |
+
+---
+
+## 📄 Documentation
+
+docs/design.md → system architecture
+docs/ai_prompts.md → AI assistance used
 
 ---
 
 ## 🚀 Future Improvements
 
-* Authentication system
+* User authentication
 * Quiz timer enforcement
 * Leaderboard
 * Randomized questions
-* Web frontend integration
+* Web frontend
+
+---
+
+## 📝 License
+
+MIT
