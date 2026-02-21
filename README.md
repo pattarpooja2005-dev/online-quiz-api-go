@@ -108,7 +108,7 @@ POST `/start`
 ```
 {
   "quizID": 1,
-  "userName": "Pooja"
+  "userName": "Joe"
 }
 ```
 
