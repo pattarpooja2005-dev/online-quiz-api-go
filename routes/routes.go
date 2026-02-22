@@ -11,5 +11,4 @@ func SetupRoutes(r *gin.Engine) {
 	r.POST("/question", handlers.CreateQuestion)
 	r.POST("/start", handlers.StartAttempt)
 	r.POST("/submit", handlers.SubmitAnswers)
-
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Result</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>Quiz Result</h1>
+<h2 id="score"></h2>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+document.getElementById("score").innerText =
+"Your Score: " + params.get("score");
+</script>
+
+</body>
+</html>
