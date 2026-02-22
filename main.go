@@ -9,7 +9,7 @@ import (
 
 func main() {
 	println("SERVER STARTING...")
-
+    println("NEW VERSION RUNNING")
 	// connect database
 	config.ConnectDatabase()
 

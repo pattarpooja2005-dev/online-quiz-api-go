@@ -5,7 +5,7 @@ import (
 	"quiz-api/handlers"
 )
 
-func SetupRoutes(r *gin.Engine) {
+	func SetupRoutes(r *gin.Engine) {
 
 	r.POST("/quiz", handlers.CreateQuiz)
 	r.POST("/question", handlers.CreateQuestion)

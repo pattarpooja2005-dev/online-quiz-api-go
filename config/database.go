@@ -18,11 +18,11 @@ func ConnectDatabase() {
 	DB = database
 
 	DB.AutoMigrate(
-		&models.Quiz{},
-		&models.Question{},
-		&models.Attempt{},
-		&models.Answer{},
-	)
+    &models.Quiz{},
+    &models.Question{},
+    &models.Attempt{},
+    &models.Answer{},
+)
 
 	fmt.Println("Database connected")
 }

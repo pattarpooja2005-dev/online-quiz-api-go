@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"time"
 	"github.com/gin-gonic/gin"
 	"quiz-api/config"
 	"quiz-api/models"
@@ -16,28 +15,28 @@ func SubmitAnswers(c *gin.Context) {
 		return
 	}
 
+	config.DB.Create(&answers)
+
+	score := calculateScore(answers)
+
+	c.JSON(200, gin.H{
+		"score": score,
+	})
+}
+
+func calculateScore(answers []models.Answer) int {
+
 	score := 0
 
 	for _, ans := range answers {
 
-		var question models.Question
-		config.DB.First(&question, ans.QuestionID)
+		var q models.Question
+		config.DB.First(&q, ans.QuestionID)
 
-		if ans.Selected == question.Correct {
+		if ans.Selected == q.Correct {
 			score++
 		}
-
-		config.DB.Create(&ans)
 	}
 
-	attemptID := answers[0].AttemptID
-
-	var attempt models.Attempt
-	config.DB.First(&attempt, attemptID)
-
-	attempt.Score = score
-	attempt.EndTime = time.Now()
-	config.DB.Save(&attempt)
-
-	c.JSON(200, gin.H{"score": score})
+	return score
 }
